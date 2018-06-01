@@ -31,10 +31,8 @@ module.exports = (deployer, network, accounts) => {
       tokenAddress = Token.address;
     }
 
-    return deployer.deploy(
-      PLCRVoting,
-      tokenAddress,
-    );
+    await deployer.deploy(PLCRVoting);
+    return (await PLCRVoting.deployed()).init(tokenAddress);
   })
     .then(async () => {
       if (network === 'test' || network === 'coverage') {
@@ -42,3 +40,4 @@ module.exports = (deployer, network, accounts) => {
       }
     }).catch((err) => { throw err; });
 };
+
