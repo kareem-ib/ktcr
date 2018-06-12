@@ -1,7 +1,25 @@
 const HDWalletProvider = require('truffle-hdwallet-provider');
 const fs = require('fs');
 
-const mnemonic = process.env.MNEMONIC || '';
+let mnemonic = '';
+
+if (fs.existsSync('secrets.json')) {
+  const secrets = JSON.parse(fs.readFileSync('secrets.json', 'utf8'));
+  ({ mnemonic } = secrets);
+}
+
+if (process.env.MNEMONIC) {
+  mnemonic = process.env.MNEMONIC;
+}
+
+if (mnemonic.includes('candy maple cake') && process.argv[4] !== 'mainnet') {
+  console.log(
+    'WARNING! It looks like you are trying to deploy to the Ethereum Main Network using a mnemonic',
+    'that looks suscpiciously like the default ganache mnemonic. ',
+    'See more here: https://github.com/trufflesuite/ganache/issues/275. Exiting...',
+  );
+  process.exit(1);
+}
 
 module.exports = {
   networks: {
