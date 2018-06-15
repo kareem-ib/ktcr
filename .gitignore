@@ -5,5 +5,3 @@ truffle.js
 installed_contracts/
 coverage/
 coverage.json
-
-conf/
