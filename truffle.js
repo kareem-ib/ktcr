@@ -47,5 +47,12 @@ module.exports = {
       gasPrice: 0x01, // <-- Use this low gas price
     },
   },
+  mocha: (process.argv[3] === 'gas' || process.argv[4] === 'gas') ? {
+    reporter: 'eth-gas-reporter',
+    reporterOptions: {
+      currency: 'USD',
+      gasPrice: 21,
+    },
+  } : {},
 };
 
