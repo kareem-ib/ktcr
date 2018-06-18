@@ -1,0 +1,79 @@
+/* eslint-env mocha */
+/* global contract artifacts */
+const fs = require('fs');
+
+const RegistryFactory = artifacts.require('./RegistryFactory.sol');
+
+const PLCRVoting = artifacts.require('PLCRVoting.sol');
+const Parameterizer = artifacts.require('Parameterizer.sol');
+const Registry = artifacts.require('Registry.sol');
+const Token = artifacts.require('EIP20.sol');
+
+const config = JSON.parse(fs.readFileSync('./conf/catt.json'));
+const paramConfig = config.paramDefaults;
+
+contract('RegistryFactory', () => {
+  describe('Function: newRegistryWithToken', () => {
+    it('DEPLOY', async () => {
+      async function giveTokensTo(tokenHolders, token) {
+        // no token holders
+        if (tokenHolders.length === 0) { return; }
+
+        const tokenHolder = tokenHolders[0];
+        // display converted unit amounts (account for decimals)
+        const displayAmt = tokenHolder.amount.slice(
+          0,
+          tokenHolder.amount.length - parseInt(config.token.decimals, 10),
+        );
+        // eslint-disable-next-line
+        console.log(`Allocating ${displayAmt} ${config.token.symbol} tokens to ` +
+        `${tokenHolder.address}.`);
+        // transfer to token holder
+        await token.transfer(tokenHolder.address, tokenHolder.amount);
+
+        // shift 1 ->
+        await giveTokensTo(tokenHolders.slice(1), token);
+      }
+
+      const registryFactory = await RegistryFactory.deployed();
+      const registryReceipt = await registryFactory.newRegistryWithToken(
+        config.token.supply,
+        config.token.name,
+        config.token.decimals,
+        config.token.symbol,
+        [
+          paramConfig.minDeposit,
+          paramConfig.pMinDeposit,
+          paramConfig.applyStageLength,
+          paramConfig.pApplyStageLength,
+          paramConfig.commitStageLength,
+          paramConfig.pCommitStageLength,
+          paramConfig.revealStageLength,
+          paramConfig.pRevealStageLength,
+          paramConfig.dispensationPct,
+          paramConfig.pDispensationPct,
+          paramConfig.voteQuorum,
+          paramConfig.pVoteQuorum,
+        ],
+        config.name,
+      );
+
+      const {
+        token,
+        plcr,
+        parameterizer,
+        registry,
+      } = registryReceipt.logs[0].args;
+
+      const tokenInstance = await Token.at(token);
+      await PLCRVoting.at(plcr);
+      await Parameterizer.at(parameterizer);
+      const registryProxy = await Registry.at(registry);
+
+      console.log('token:', tokenInstance.address);
+      console.log('registry:', registryProxy.address);
+
+      await giveTokensTo(config.token.tokenHolders, tokenInstance);
+    });
+  });
+});
