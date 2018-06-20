@@ -80,7 +80,6 @@ module.exports = (deployer, network) => {
     deployProxies().then(token => giveTokensTo(config.token.tokenHolders, token));
   } else {
     // eslint-disable-next-line
-    console.log('skipping optional token deploy and using the token at address ' +
-      `${config.token.address} on network ${network}.`);
+    console.log(`skipping optional token deploy on network ${network}.`);
   }
 };
