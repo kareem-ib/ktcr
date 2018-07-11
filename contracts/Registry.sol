@@ -11,7 +11,7 @@ contract Registry {
     // EVENTS
     // ------
 
-    event _Application(bytes32 indexed listingHash, uint deposit, uint appEndDate, string data, address indexed applicant);
+    event _Application(bytes32 indexed listingHash, uint deposit, uint appEndDate, string listingId, string listingData, address indexed applicant);
     event _Challenge(bytes32 indexed listingHash, uint challengeID, string data, uint commitEndDate, uint revealEndDate, address indexed challenger);
     event _Deposit(bytes32 indexed listingHash, uint added, uint newTotal, address indexed owner);
     event _Withdrawal(bytes32 indexed listingHash, uint withdrew, uint newTotal, address indexed owner);
@@ -86,9 +86,10 @@ contract Registry {
                         apply stage end time.
     @param _listingHash The hash of a potential listing a user is applying to add to the registry
     @param _amount      The number of ERC20 tokens a user is willing to potentially stake
-    @param _data        Extra data relevant to the application. Think IPFS hashes.
+    @param _listingId   The string that gets hashed into a listingHash
+    @param _listingData The extra metadata associated with the listing
     */
-    function apply(bytes32 _listingHash, uint _amount, string _data) external {
+    function apply(bytes32 _listingHash, uint _amount, string _listingId, string _listingData) external {
         require(!isWhitelisted(_listingHash));
         require(!appWasMade(_listingHash));
         require(_amount >= parameterizer.get("minDeposit"));
@@ -104,7 +105,7 @@ contract Registry {
         // Transfers tokens from user to Registry contract
         require(token.transferFrom(listing.owner, this, _amount));
 
-        _Application(_listingHash, _amount, listing.applicationExpiry, _data, msg.sender);
+        _Application(_listingHash, _amount, listing.applicationExpiry, _listingId, _listingData, msg.sender);
     }
 
     /**
