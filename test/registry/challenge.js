@@ -25,7 +25,7 @@ contract('Registry', (accounts) => {
 
       const challengerStartingBalance = await token.balanceOf.call(challenger);
 
-      await utils.as(applicant, registry.apply, listing, paramConfig.minDeposit, '');
+      await utils.as(applicant, registry.apply, listing, paramConfig.minDeposit, '', '');
       await utils.challengeAndGetPollID(listing, challenger);
       await utils.increaseTime(paramConfig.commitStageLength + paramConfig.revealStageLength + 1);
       await registry.updateStatus(listing);
@@ -75,7 +75,7 @@ contract('Registry', (accounts) => {
       const listing = utils.getListingHash('winner.net');
       const minDeposit = new BN(paramConfig.minDeposit, 10);
 
-      await utils.as(applicant, registry.apply, listing, minDeposit, '');
+      await utils.as(applicant, registry.apply, listing, minDeposit, '', '');
       const pollID = await utils.challengeAndGetPollID(listing, challenger);
       await utils.commitVote(pollID, 1, 10, 420, voter);
       await utils.increaseTime(paramConfig.commitStageLength + 1);
@@ -204,7 +204,7 @@ contract('Registry', (accounts) => {
       const listing = utils.getListingHash('challengerNeedsTokens.net');
 
       const minDeposit = new BN(await parameterizer.get.call('minDeposit'), 10);
-      await utils.as(applicant, registry.apply, listing, minDeposit, '');
+      await utils.as(applicant, registry.apply, listing, minDeposit, '', '');
 
       // Approve the contract to transfer 0 tokens from account so the transfer will fail
       await token.approve(registry.address, '0', { from: challenger });

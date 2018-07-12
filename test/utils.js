@@ -60,7 +60,7 @@ const utils = {
 
   addToWhitelist: async (domain, deposit, actor) => {
     const registry = await Registry.deployed();
-    await utils.as(actor, registry.apply, domain, deposit, '');
+    await utils.as(actor, registry.apply, domain, deposit, '', '');
     await utils.increaseTime(paramConfig.applyStageLength + 1);
     await utils.as(actor, registry.updateStatus, domain);
   },

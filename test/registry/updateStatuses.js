@@ -20,7 +20,7 @@ contract('Registry', (accounts) => {
     it('should whitelist an array of 1 listing', async () => {
       const registry = await Registry.deployed();
       const listing = utils.getListingHash('whitelistmepls.io');
-      await utils.as(applicant, registry.apply, listing, minDeposit, '');
+      await utils.as(applicant, registry.apply, listing, minDeposit, '', '');
 
       await utils.increaseTime(paramConfig.applyStageLength + 1);
 
@@ -34,8 +34,8 @@ contract('Registry', (accounts) => {
       const registry = await Registry.deployed();
       const listing1 = utils.getListingHash('whitelistus1.io');
       const listing2 = utils.getListingHash('whitelistus2.io');
-      await utils.as(applicant, registry.apply, listing1, minDeposit, '');
-      await utils.as(applicant, registry.apply, listing2, minDeposit, '');
+      await utils.as(applicant, registry.apply, listing1, minDeposit, '', '');
+      await utils.as(applicant, registry.apply, listing2, minDeposit, '', '');
 
       await utils.increaseTime(paramConfig.applyStageLength + 1);
 
@@ -50,7 +50,7 @@ contract('Registry', (accounts) => {
     it('should not whitelist an array of 1 listing that is still pending an application', async () => {
       const registry = await Registry.deployed();
       const listing = utils.getListingHash('tooearlybuddy.io');
-      await utils.as(applicant, registry.apply, listing, minDeposit, '');
+      await utils.as(applicant, registry.apply, listing, minDeposit, '', '');
 
       const listings = [listing];
       try {
@@ -66,7 +66,7 @@ contract('Registry', (accounts) => {
       const registry = await Registry.deployed();
       const listing = utils.getListingHash('dontwhitelist.io');
 
-      await utils.as(applicant, registry.apply, listing, minDeposit, '');
+      await utils.as(applicant, registry.apply, listing, minDeposit, '', '');
       await utils.as(challenger, registry.challenge, listing, '');
 
       const listings = [listing];
@@ -83,7 +83,7 @@ contract('Registry', (accounts) => {
       const registry = await Registry.deployed();
       const listing = utils.getListingHash('dontwhitelist.net');
 
-      await utils.as(applicant, registry.apply, listing, minDeposit, '');
+      await utils.as(applicant, registry.apply, listing, minDeposit, '', '');
       await utils.as(challenger, registry.challenge, listing, '');
 
       const plcrComplete = paramConfig.revealStageLength + paramConfig.commitStageLength + 1;

@@ -25,7 +25,7 @@ contract('Registry', (accounts) => {
       const listing = utils.getListingHash('claimthis.net');
 
       // Apply
-      await utils.as(applicant, registry.apply, listing, minDeposit, '');
+      await utils.as(applicant, registry.apply, listing, minDeposit, '', '');
       const aliceStartingBalance = await token.balanceOf.call(voterAlice);
 
       // Challenge
@@ -72,9 +72,9 @@ contract('Registry', (accounts) => {
       const aliceStartingBalance = await token.balanceOf.call(voterAlice);
 
       // Apply
-      await utils.as(applicant, registry.apply, listing1, minDeposit, '');
-      await utils.as(applicant, registry.apply, listing2, minDeposit, '');
-      await utils.as(applicant, registry.apply, listing3, minDeposit, '');
+      await utils.as(applicant, registry.apply, listing1, minDeposit, '', '');
+      await utils.as(applicant, registry.apply, listing2, minDeposit, '', '');
+      await utils.as(applicant, registry.apply, listing3, minDeposit, '', '');
 
       // Challenge
       const pollID1 = await utils.challengeAndGetPollID(listing1, challenger);

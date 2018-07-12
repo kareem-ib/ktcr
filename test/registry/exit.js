@@ -103,7 +103,7 @@ contract('Registry', (accounts) => {
       const registry = await Registry.deployed();
       const listing = utils.getListingHash('real.net');
 
-      await utils.as(applicant, registry.apply, listing, paramConfig.minDeposit, '');
+      await utils.as(applicant, registry.apply, listing, paramConfig.minDeposit, '', '');
 
       try {
         await registry.exit(listing, { from: applicant });

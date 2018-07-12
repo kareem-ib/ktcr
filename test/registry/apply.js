@@ -20,7 +20,7 @@ contract('Registry', (accounts) => {
       const registry = await Registry.deployed();
       const listing = utils.getListingHash('nochallenge.net');
 
-      await utils.as(applicant, registry.apply, listing, paramConfig.minDeposit, '');
+      await utils.as(applicant, registry.apply, listing, paramConfig.minDeposit, '', '');
 
       // get the struct in the mapping
       const result = await registry.listings.call(listing);
@@ -44,7 +44,7 @@ contract('Registry', (accounts) => {
       assert.strictEqual(result[2], applicant, 'owner of application != address that applied');
 
       try {
-        await utils.as(applicant, registry.apply, listing, paramConfig.minDeposit, '');
+        await utils.as(applicant, registry.apply, listing, paramConfig.minDeposit, '', '');
       } catch (err) {
         assert(utils.isEVMException(err), err.toString());
         return;
@@ -73,7 +73,7 @@ contract('Registry', (accounts) => {
       assert.strictEqual(result, true, 'listing was not already whitelisted.');
 
       try {
-        await utils.as(applicant, registry.apply, listing, paramConfig.minDeposit, '');
+        await utils.as(applicant, registry.apply, listing, paramConfig.minDeposit, '', '');
       } catch (err) {
         // TODO: Check if EVM error
         const errMsg = err.toString();
@@ -94,7 +94,7 @@ contract('Registry', (accounts) => {
         await token.approve(registry.address, '0', { from: applicant });
 
         try {
-          await utils.as(applicant, registry.apply, listing, paramConfig.minDeposit, '');
+          await utils.as(applicant, registry.apply, listing, paramConfig.minDeposit, '', '');
         } catch (err) {
           assert(utils.isEVMException(err), err.toString());
           return;
@@ -132,7 +132,7 @@ contract('Registry', (accounts) => {
       const listing = utils.getListingHash('overflow.net');
 
       try {
-        await utils.as(applicant, registry.apply, listing, paramConfig.minDeposit, '');
+        await utils.as(applicant, registry.apply, listing, paramConfig.minDeposit, '', '');
       } catch (err) {
         assert(err.toString().includes('invalid opcode'), err.toString());
         return;
@@ -149,7 +149,7 @@ contract('Registry', (accounts) => {
       const deposit = minDeposit.sub(10);
 
       try {
-        await utils.as(applicant, registry.apply, listing, deposit.toString(), '');
+        await utils.as(applicant, registry.apply, listing, deposit.toString(), '', '');
       } catch (err) {
         assert(utils.isEVMException(err), err.toString());
         return;

@@ -20,7 +20,7 @@ contract('Registry', (accounts) => {
     it('should apply, fail challenge, and reject listing', async () => {
       const registry = await Registry.deployed();
       const listing = utils.getListingHash('failChallenge.net'); // listing to apply with
-      await registry.apply(listing, paramConfig.minDeposit, '', { from: applicant });
+      await registry.apply(listing, paramConfig.minDeposit, '', '', { from: applicant });
       await registry.challenge(listing, '', { from: challenger });
 
       await utils.increaseTime(paramConfig.revealStageLength + paramConfig.commitStageLength + 1);
@@ -36,7 +36,7 @@ contract('Registry', (accounts) => {
       const voting = await utils.getVoting();
       const listing = utils.getListingHash('passChallenge.net');
 
-      await utils.as(applicant, registry.apply, listing, minDeposit, '');
+      await utils.as(applicant, registry.apply, listing, minDeposit, '', '');
 
       // Challenge and get back the pollID
       const pollID = await utils.challengeAndGetPollID(listing, challenger);

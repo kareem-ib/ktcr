@@ -37,7 +37,7 @@ contract('Registry', (accounts) => {
     it('should increase a deposit for a pending application', async () => {
       const registry = await Registry.deployed();
       const listing = utils.getListingHash('pendinglisting.net');
-      await utils.as(applicant, registry.apply, listing, minDeposit, '');
+      await utils.as(applicant, registry.apply, listing, minDeposit, '', '');
 
       try {
         await utils.as(applicant, registry.deposit, listing, incAmount);
